@@ -1,0 +1,104 @@
+{
+  "$defs": {
+    "ConversionConfig": {
+      "properties": {
+        "repaginate": {
+          "default": true,
+          "title": "Repaginate",
+          "type": "boolean"
+        },
+        "dpi": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "default": 300,
+          "title": "Dpi"
+        },
+        "height": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "default": 297,
+          "title": "Height"
+        }
+      },
+      "title": "ConversionConfig",
+      "type": "object"
+    },
+    "DirectoriesConfig": {
+      "properties": {
+        "source": {
+          "title": "Source",
+          "type": "string"
+        },
+        "target": {
+          "title": "Target",
+          "type": "string"
+        }
+      },
+      "required": [
+        "source",
+        "target"
+      ],
+      "title": "DirectoriesConfig",
+      "type": "object"
+    },
+    "LayoutConfig": {
+      "properties": {
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "description": {
+          "default": "",
+          "title": "Description",
+          "type": "string"
+        },
+        "content": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/LayoutConfig"
+          },
+          "title": "Content",
+          "type": "array"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "LayoutConfig",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "conversion": {
+      "$ref": "#/$defs/ConversionConfig"
+    },
+    "directories": {
+      "$ref": "#/$defs/DirectoriesConfig"
+    },
+    "layouts": {
+      "items": {
+        "$ref": "#/$defs/LayoutConfig"
+      },
+      "title": "Layouts",
+      "type": "array"
+    }
+  },
+  "required": [
+    "directories",
+    "layouts"
+  ],
+  "title": "BaseConfig",
+  "type": "object"
+}

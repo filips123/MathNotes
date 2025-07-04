@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+
+{% macro render_tree(tree, path="") %}
+  <ul>
+    {% for key, node in tree.items() %}
+      <li>
+        {% if node.type == "directory" %}
+          <p class="directory-title">{{ node.name }}</p>
+          {% if node.description %}
+            <p class="directory-description">{{ node.description }}</p>
+          {% endif %}
+          {{ render_tree(node.content, path ~ "/" ~ node.slug) }}
+        {% elif node.type == "file" %}
+          <p class="file-title">
+            <a href="{{ (path ~ '/' ~ node.slug ~ '.pdf').lstrip('/') }}">{{ node.name }}</a>
+          </p>
+          {% if node.description %}
+            <p class="file-description">{{ node.description }}</p>
+          {% endif %}
+          <p class="file-links">
+            {% for extension in node.extensions %}
+              <a href="{{ (path ~ '/' ~ node.slug ~ '.' ~ extension).lstrip('/') }}">{{ extension.upper() }}</a>
+              {% if not loop.last %} | {% endif %}
+            {% endfor %}
+          </p>
+          <p class="file-dates">
+            {% if node.modified %}Posodobljeno: {{ node.modified|parse_datetime|format_datetime }} <br />{% endif %}
+            {% if node.converted %}Obdelano: {{ node.converted|parse_datetime|format_datetime }}{% endif %}
+          </p>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+{% endmacro %}
+
+<html lang="sl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <link rel="stylesheet" href="https://unpkg.com/simpledotcss/simple.min.css" />
+
+    <title>Matematični Zapiski</title>
+    <meta name="description" content="Zapiski predavanj in vaj za študij matematike na FMF" />
+    <meta name="keywords" content="matematika, zapiski, fmf, fakulteta za matematiko in fiziko" />
+
+    <style>
+      main {
+        padding: 0;
+      }
+
+      p {
+        margin-top: 16px;
+        margin-bottom: 16px;
+      }
+
+      ul {
+        list-style-type: none;
+        padding-left: 0;
+      }
+
+      ul ul {
+        padding-left: 20px;
+      }
+
+      a {
+        text-decoration: none;
+      }
+
+      .notice > :first-child {
+        margin-top: 0;
+      }
+
+      .notice > :last-child {
+        margin-bottom: 0;
+      }
+
+      .disclaimer {
+        text-align: justify;
+      }
+
+      .directory-title,
+      .file-title {
+        font-weight: bold;
+        font-size: 1.2em;
+      }
+
+      .directory-description,
+      .file-description {
+        font-size: 1.0em;
+      }
+
+      .file-links {
+        font-size: 0.9em;
+      }
+
+      .file-dates {
+        font-size: 0.9em;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <h1>Matematični Zapiski</h1>
+    </header>
+
+    <main>
+      <div class="notice">
+        <p class="disclaimer">
+          Stran vsebuje zapiske predavanj in vaj za študij matematike na Fakulteti za matematiko in fiziko Univerze v
+          Ljubljani. Pravilnosti in popolnosti zapiskov ne zagotavljam, zato jih uporabljajte na lastno odgovornost.
+          Namenjeni so osebni nekomercialni uporabi.
+        </p>
+
+        <p class="author">
+          Avtor: Filip Štamcar
+        </p>
+      </div>
+
+      {{ render_tree(tree) }}
+    </main>
+  </body>
+</html>

@@ -1,0 +1,14 @@
+# Repagination
+pdfplumber
+pillow
+numpy
+
+# Config
+pydantic
+pydantic-yaml
+
+# Utilities
+unidecode
+watchdog
+click
+jinja2
