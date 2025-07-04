@@ -7,4 +7,6 @@ RUN pip install --no-cache-dir --requirement requirements.txt
 
 COPY . .
 
-CMD [ "python", "main.py", "watch", "--config", "$CONFIG" ]
+ENV CONFIG config.yaml
+
+CMD exec python main.py watch --config $CONFIG
