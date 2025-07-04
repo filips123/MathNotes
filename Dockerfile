@@ -2,7 +2,7 @@ FROM python:3.13-alpine
 
 WORKDIR /usr/src/app
 
-RUN apk add --update --no-cache wget curl openssh rsync lftp
+RUN apk add --update --no-cache wget curl openssh rsync weex
 
 COPY requirements.txt .
 RUN pip install --no-cache-dir --requirement requirements.txt
