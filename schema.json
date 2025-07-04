@@ -53,6 +53,36 @@
       "title": "DirectoriesConfig",
       "type": "object"
     },
+    "HookConfig": {
+      "properties": {
+        "pre": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Pre"
+        },
+        "post": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Post"
+        }
+      },
+      "title": "HookConfig",
+      "type": "object"
+    },
     "LayoutConfig": {
       "properties": {
         "name": {
@@ -81,6 +111,9 @@
     }
   },
   "properties": {
+    "hooks": {
+      "$ref": "#/$defs/HookConfig"
+    },
     "conversion": {
       "$ref": "#/$defs/ConversionConfig"
     },

@@ -29,7 +29,10 @@ class SourceHandler(FileSystemEventHandler):
             wait_ready(event.src_path)
 
             config = parse_yaml_file_as(BaseConfig, self.config)
+
+            run_pre_hook(config)
             handle_source(config)
+            run_post_hook(config)
 
 
 class TargetHandler(FileSystemEventHandler):
@@ -38,7 +41,10 @@ class TargetHandler(FileSystemEventHandler):
 
     def on_deleted(self, event):
         config = parse_yaml_file_as(BaseConfig, self.config)
+
+        run_pre_hook(config)
         handle_target(config)
+        run_post_hook(config)
 
 
 class ConfigHandler(FileSystemEventHandler):
@@ -52,10 +58,13 @@ class ConfigHandler(FileSystemEventHandler):
             logging.info("Config file changed, reloading...")
 
             config = parse_yaml_file_as(BaseConfig, self.config)
+
+            run_pre_hook(config)
             handle_source(config, False)
             handle_target(config, False)
             update_metadata(config, False)
             render_index(config)
+            run_post_hook(config)
 
 
 def handle_source(config: BaseConfig, index=True):
@@ -244,6 +253,18 @@ def render_index(config: BaseConfig):
         file.write(template.render(tree=sort_tree(metadata.content)))
 
 
+def run_pre_hook(config: BaseConfig):
+    if config.hooks.pre:
+        logging.info("Running pre-hook: %s", config.hooks.pre)
+        os.system(config.hooks.pre)
+
+
+def run_post_hook(config: BaseConfig):
+    if config.hooks.post:
+        logging.info("Running post-hook: %s", config.hooks.post)
+        os.system(config.hooks.post)
+
+
 @click.group()
 def cli():
     logging.basicConfig(
@@ -269,10 +290,12 @@ def process(config: str):
 
     config = parse_yaml_file_as(BaseConfig, config)
 
+    run_pre_hook(config)
     handle_source(config, False)
     handle_target(config, False)
     update_metadata(config, False)
     render_index(config)
+    run_post_hook(config)
 
 
 @cli.command()
@@ -283,10 +306,13 @@ def watch(config: str):
     configfile = os.path.abspath(config)
 
     config = parse_yaml_file_as(BaseConfig, configfile)
+
+    run_pre_hook(config)
     handle_source(config, False)
     handle_target(config, False)
     update_metadata(config, False)
     render_index(config)
+    run_post_hook(config)
 
     logging.info("Watching for file changes...")
 

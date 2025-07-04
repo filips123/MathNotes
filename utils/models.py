@@ -5,6 +5,11 @@ from typing import Literal
 from pydantic import BaseModel, Field, RootModel
 
 
+class HookConfig(BaseModel):
+    pre: str | None = None
+    post: str | None = None
+
+
 class ConversionConfig(BaseModel):
     repaginate: bool = True
     dpi: int | float = 300
@@ -23,6 +28,7 @@ class LayoutConfig(BaseModel):
 
 
 class BaseConfig(BaseModel):
+    hooks: HookConfig = Field(default_factory=HookConfig)
     conversion: ConversionConfig = Field(default_factory=ConversionConfig)
     directories: DirectoriesConfig
     layouts: list[LayoutConfig]
