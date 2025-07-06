@@ -87,49 +87,53 @@ def handle_source(config: BaseConfig, index=True):
 
         for filename in os.listdir(source):
             if filename.lower().endswith(".pdf"):
-                name = re.sub(r" \(\d+\)$", "", filename[:-4])
-                parts = name.rsplit("_", 2)
-
-                title = parts[0]
-                slug = slugify(title)
-
-                source_filename = os.path.join(source, filename)
-                target_filename_pdf = os.path.join(target, slug + ".pdf")
-                target_filename_sdocx = os.path.join(target, slug + ".sdocx")
-
-                logging.info("Processing: %s", source_filename)
-
                 try:
-                    modified = time.strptime(f"{parts[1]}-{parts[2]}", "%y%m%d-%H%M%S")
-                except (IndexError, ValueError):
-                    logging.warning("Failed to parse date from filename, using file modification date")
-                    modified = time.localtime(os.path.getmtime(os.path.join(source, filename)))
+                    name = re.sub(r" \(\d+\)$", "", filename[:-4])
+                    parts = name.rsplit("_", 2)
 
-                changes = True
+                    title = parts[0]
+                    slug = slugify(title)
 
-                if config.conversion.repaginate:
-                    repaginate_pdf(
-                        source_filename,
-                        target_filename_pdf,
-                        dpi=config.conversion.dpi,
-                        height=config.conversion.height,
+                    source_filename = os.path.join(source, filename)
+                    target_filename_pdf = os.path.join(target, slug + ".pdf")
+                    target_filename_sdocx = os.path.join(target, slug + ".sdocx")
+
+                    logging.info("Processing: %s", source_filename)
+
+                    try:
+                        modified = time.strptime(f"{parts[1]}-{parts[2]}", "%y%m%d-%H%M%S")
+                    except (IndexError, ValueError):
+                        logging.warning("Failed to parse date from filename, using file modification date")
+                        modified = time.localtime(os.path.getmtime(os.path.join(source, filename)))
+
+                    changes = True
+
+                    if config.conversion.repaginate:
+                        repaginate_pdf(
+                            source_filename,
+                            target_filename_pdf,
+                            dpi=config.conversion.dpi,
+                            height=config.conversion.height,
+                        )
+                    else:
+                        shutil.copy2(source_filename, target_filename_pdf)
+
+                    sdocx = extract_sdocx(source_filename, target_filename_sdocx)
+
+                    os.remove(source_filename)
+
+                    pathdata.content[slug] = FileMetadata(
+                        slug=slug,
+                        name=title,
+                        modified=time.strftime("%Y-%m-%d %H:%M:%S", modified),
+                        converted=time.strftime("%Y-%m-%d %H:%M:%S"),
+                        extensions=["pdf", "sdocx"] if sdocx else ["pdf"],
                     )
-                else:
-                    shutil.copy2(source_filename, target_filename_pdf)
 
-                sdocx = extract_sdocx(source_filename, target_filename_sdocx)
+                    logging.info("Processed: %s", target_filename_pdf)
 
-                os.remove(source_filename)
-
-                pathdata.content[slug] = FileMetadata(
-                    slug=slug,
-                    name=title,
-                    modified=time.strftime("%Y-%m-%d %H:%M:%S", modified),
-                    converted=time.strftime("%Y-%m-%d %H:%M:%S"),
-                    extensions=["pdf", "sdocx"] if sdocx else ["pdf"],
-                )
-
-                logging.info("Processed: %s", target_filename_pdf)
+                except Exception as error:
+                    logging.exception("Failed to process document: %s", error)
 
     if not changes:
         return
