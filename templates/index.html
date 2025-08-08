@@ -4,14 +4,19 @@
   <ul>
     {% for key, node in tree.items() %}
       <li>
+        {% set node_id = (path ~ '/' ~ node.slug).lstrip('/').replace('/', '-') %}
         {% if node.type == "directory" %}
-          <p class="directory-title">{{ node.name }}</p>
+          <p class="directory-title" id="{{ node_id }}">
+            <a class="directory-link" href="#{{ node_id }}">
+              <span>{{ node.name }}</span><span class="directory-hash" aria-hidden="true">#</span>
+            </a>
+          </p>
           {% if node.description %}
             <p class="directory-description">{{ node.description }}</p>
           {% endif %}
           {{ render_tree(node.content, path ~ "/" ~ node.slug) }}
         {% elif node.type == "file" %}
-          <p class="file-title">
+          <p class="file-title" id="{{ node_id }}">
             <a href="{{ (path ~ '/' ~ node.slug ~ '.pdf').lstrip('/') }}">{{ node.name }}</a>
           </p>
           {% if node.description %}
@@ -76,7 +81,8 @@
         margin-bottom: 0;
       }
 
-      .disclaimer {
+      .disclaimer,
+      .fanclub {
         text-align: justify;
       }
 
@@ -84,6 +90,25 @@
       .file-title {
         font-weight: bold;
         font-size: 1.2em;
+      }
+
+      .directory-link,
+      .directory-link:visited {
+        color: inherit;
+      }
+
+      .directory-hash,
+      .directory-hash:visited {
+        margin-left: 0.5em;
+        color: #888;
+        opacity: 0;
+        transition: opacity 0.2s;
+      }
+
+      .directory-link:hover .directory-hash,
+      .directory-link:focus-within .directory-hash,
+      .directory-title:target .directory-hash {
+        opacity: 1;
       }
 
       .directory-description,
@@ -112,6 +137,10 @@
           Stran vsebuje zapiske predavanj in vaj za študij matematike na Fakulteti za matematiko in fiziko Univerze v
           Ljubljani. Pravilnosti in popolnosti zapiskov ne zagotavljam, zato jih uporabljajte na lastno odgovornost.
           Namenjeni so osebni nekomercialni uporabi.
+        </p>
+
+        <p class="fanclub">
+          Priporočam tudi ogled in članstvo v <a href="https://4a.si/pretnar" target="_blank">Klubu oboževalk Matije Pretnarja</a>.
         </p>
 
         <p class="author">
