@@ -1,0 +1,94 @@
+main {
+  padding: 0;
+}
+
+p {
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+ul ul {
+  padding-left: 20px;
+}
+
+a {
+  text-decoration: none;
+}
+
+.notice > :first-child {
+  margin-top: 0;
+}
+
+.notice > :last-child {
+  margin-bottom: 0;
+}
+
+.disclaimer,
+.fanclub {
+  text-align: justify;
+}
+
+.directory-title,
+.file-title {
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+.directory-link,
+.directory-link:visited {
+  color: inherit;
+  display: flex;
+}
+
+.directory-hash,
+.directory-hash:visited {
+  margin-left: 0.5em;
+  color: #888;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.directory-link:hover .directory-hash,
+.directory-link:focus-within .directory-hash,
+.directory-title:target .directory-hash {
+  opacity: 1;
+}
+
+.directory-description,
+.file-description {
+  font-size: 1.0em;
+}
+
+.file-links {
+  font-size: 0.9em;
+}
+
+.file-dates {
+  font-size: 0.9em;
+}
+
+.fanclub,
+.fanclub > * {
+  animation: fanclub 400ms infinite;
+  cursor: url("/img/cursor-arrow-0.gif") 24 24, auto;
+}
+
+@keyframes fanclub {
+  0% {
+    cursor: url("/img/cursor-arrow-0.gif") 24 24, auto;
+  }
+  25% {
+    cursor: url("/img/cursor-arrow-1.gif") 24 24, auto;
+  }
+  50% {
+    cursor: url("/img/cursor-arrow-2.gif") 24 24, auto;
+  }
+  75% {
+    cursor: url("/img/cursor-arrow-3.gif") 24 24, auto;
+  }
+}

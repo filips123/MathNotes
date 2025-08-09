@@ -244,7 +244,9 @@ def render_index(config: BaseConfig):
     with open(metafile, encoding="utf-8") as file:
         metadata = BaseMetadata.model_validate_json(file.read())
 
-    loader = FileSystemLoader(searchpath=os.path.join(os.path.dirname(__file__), "templates"))
+    dirname = os.path.dirname(__file__)
+
+    loader = FileSystemLoader(searchpath=os.path.join(dirname, "templates"))
     environment = Environment(loader=loader, autoescape=True)
     environment.filters["slugify"] = slugify
     environment.filters["parse_datetime"] = parse_datetime
@@ -255,6 +257,8 @@ def render_index(config: BaseConfig):
 
     with open(output, "w", encoding="utf-8") as file:
         file.write(template.render(tree=sort_tree(metadata.content)))
+
+    shutil.copytree(os.path.join(dirname, "assets"), config.directories.target, dirs_exist_ok=True)
 
 
 def run_pre_hook(config: BaseConfig):

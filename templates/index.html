@@ -8,7 +8,8 @@
         {% if node.type == "directory" %}
           <p class="directory-title" id="{{ node_id }}">
             <a class="directory-link" href="#{{ node_id }}">
-              <span>{{ node.name }}</span><span class="directory-hash" aria-hidden="true">#</span>
+              <span>{{ node.name }}</span>
+              <span class="directory-hash" aria-hidden="true">#</span>
             </a>
           </p>
           {% if node.description %}
@@ -44,86 +45,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-    <link rel="stylesheet" href="https://unpkg.com/simpledotcss/simple.min.css" />
+    <link rel="stylesheet" href="/css/simple.css" />
+    <link rel="stylesheet" href="/css/main.css" />
 
     <title>Matematični Zapiski</title>
     <meta name="description" content="Zapiski predavanj in vaj za študij matematike na FMF" />
     <meta name="keywords" content="matematika, zapiski, fmf, fakulteta za matematiko in fiziko" />
-
-    <style>
-      main {
-        padding: 0;
-      }
-
-      p {
-        margin-top: 16px;
-        margin-bottom: 16px;
-      }
-
-      ul {
-        list-style-type: none;
-        padding-left: 0;
-      }
-
-      ul ul {
-        padding-left: 20px;
-      }
-
-      a {
-        text-decoration: none;
-      }
-
-      .notice > :first-child {
-        margin-top: 0;
-      }
-
-      .notice > :last-child {
-        margin-bottom: 0;
-      }
-
-      .disclaimer,
-      .fanclub {
-        text-align: justify;
-      }
-
-      .directory-title,
-      .file-title {
-        font-weight: bold;
-        font-size: 1.2em;
-      }
-
-      .directory-link,
-      .directory-link:visited {
-        color: inherit;
-      }
-
-      .directory-hash,
-      .directory-hash:visited {
-        margin-left: 0.5em;
-        color: #888;
-        opacity: 0;
-        transition: opacity 0.2s;
-      }
-
-      .directory-link:hover .directory-hash,
-      .directory-link:focus-within .directory-hash,
-      .directory-title:target .directory-hash {
-        opacity: 1;
-      }
-
-      .directory-description,
-      .file-description {
-        font-size: 1.0em;
-      }
-
-      .file-links {
-        font-size: 0.9em;
-      }
-
-      .file-dates {
-        font-size: 0.9em;
-      }
-    </style>
+    <meta name="author" content="Filip Štamcar" />
   </head>
 
   <body>
@@ -140,7 +68,8 @@
         </p>
 
         <p class="fanclub">
-          Priporočam tudi ogled in članstvo v <a href="https://4a.si/pretnar" target="_blank">Klubu oboževalk Matije Pretnarja</a>.
+          Priporočam tudi ogled in članstvo v <a href="https://progklub.4a.si/pretnar/" target="_blank">Klubu oboževalk
+          Matije Pretnarja</a>.
         </p>
 
         <p class="author">
