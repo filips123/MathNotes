@@ -19,6 +19,7 @@ class ConversionConfig(BaseModel):
 class DirectoriesConfig(BaseModel):
     source: str
     target: str
+    cleanup: bool = True
 
 
 class LayoutConfig(BaseModel):
