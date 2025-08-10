@@ -1,0 +1,48 @@
+{
+  "name": "Matematični Zapiski",
+  "description": "Zapiski predavanj in vaj za študij matematike na FMF",
+  "categories": ["education", "reference", "math"],
+  "keywords": ["matematika", "zapiski", "fmf", "fakulteta za matematiko in fiziko"],
+  "lang": "sl",
+  "start_url": "/",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/img/icons/favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    },
+    {
+      "src": "/img/icons/favicon-maskable.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/img/icons/favicon-monochrome.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "monochrome"
+    },
+    {
+      "src": "/img/icons/favicon48.png",
+      "type": "image/png",
+      "sizes": "48x48"
+    },
+    {
+      "src": "/img/icons/favicon64.png",
+      "type": "image/png",
+      "sizes": "64x64"
+    },
+    {
+      "src": "/img/icons/favicon128.png",
+      "type": "image/png",
+      "sizes": "128x128"
+    },
+    {
+      "src": "/img/icons/favicon256.png",
+      "type": "image/png",
+      "sizes": "256x256"
+    }
+  ]
+}

@@ -6,33 +6,39 @@
       <li>
         {% set node_id = (path ~ '/' ~ node.slug).lstrip('/').replace('/', '-') %}
         {% if node.type == "directory" %}
-          <p class="directory-title" id="{{ node_id }}">
-            <a class="directory-link" href="#{{ node_id }}">
-              <span>{{ node.name }}</span>
-              <span class="directory-hash" aria-hidden="true">#</span>
-            </a>
-          </p>
-          {% if node.description %}
-            <p class="directory-description">{{ node.description }}</p>
-          {% endif %}
-          {{ render_tree(node.content, path ~ "/" ~ node.slug) }}
+          <div itemscope itemtype="https://schema.org/Collection" itemid="#{{ node_id }}">
+            <p class="directory-title" id="{{ node_id }}">
+              <a class="directory-link" href="#{{ node_id }}" itemprop="url">
+                <span class="directory-name" itemprop="name">{{ node.name }}</span>
+                <span class="directory-hash" aria-hidden="true">#</span>
+              </a>
+            </p>
+            {% if node.description %}
+              <p class="directory-description" itemprop="description">{{ node.description }}</p>
+            {% endif %}
+            {{ render_tree(node.content, path ~ "/" ~ node.slug) }}
+          </div>
         {% elif node.type == "file" %}
-          <p class="file-title" id="{{ node_id }}">
-            <a href="{{ (path ~ '/' ~ node.slug ~ '.pdf').lstrip('/') }}">{{ node.name }}</a>
-          </p>
-          {% if node.description %}
-            <p class="file-description">{{ node.description }}</p>
-          {% endif %}
-          <p class="file-links">
-            {% for extension in node.extensions %}
-              <a href="{{ (path ~ '/' ~ node.slug ~ '.' ~ extension).lstrip('/') }}">{{ extension.upper() }}</a>
-              {% if not loop.last %} | {% endif %}
-            {% endfor %}
-          </p>
-          <p class="file-dates">
-            {% if node.modified %}Posodobljeno: {{ node.modified|parse_datetime|format_datetime }} <br />{% endif %}
-            {% if node.converted %}Obdelano: {{ node.converted|parse_datetime|format_datetime }}{% endif %}
-          </p>
+          <div itemscope itemtype="https://schema.org/Manuscript" itemid="#{{ node_id }}">
+            <p class="file-title" id="{{ node_id }}">
+              <a class="file-link" href="{{ (path ~ '/' ~ node.slug ~ '.pdf').lstrip('/') }}" itemprop="url">
+                <span class="file-name" itemprop="name">{{ node.name }}</span>
+              </a>
+            </p>
+            {% if node.description %}
+              <p class="file-description" itemprop="description">{{ node.description }}</p>
+            {% endif %}
+            <p class="file-links">
+              {% for extension in node.extensions %}
+                <a href="{{ (path ~ '/' ~ node.slug ~ '.' ~ extension).lstrip('/') }}">{{ extension.upper() }}</a>
+                {% if not loop.last %} | {% endif %}
+              {% endfor %}
+            </p>
+            <p class="file-dates">
+              {% if node.modified %}Posodobljeno: <span itemprop="dateModified" content="{{ node.modified }}">{{ node.modified|parse_datetime|format_datetime }}</span><br />{% endif %}
+              {% if node.converted %}Obdelano: <span>{{ node.converted|parse_datetime|format_datetime }}</span>{% endif %}
+            </p>
+          </div>
         {% endif %}
       </li>
     {% endfor %}
@@ -52,6 +58,12 @@
     <meta name="description" content="Zapiski predavanj in vaj za študij matematike na FMF" />
     <meta name="keywords" content="matematika, zapiski, fmf, fakulteta za matematiko in fiziko" />
     <meta name="author" content="Filip Štamcar" />
+
+    <link rel="canonical" href="https://math.filips.si/" />
+    <link rel="icon" type="image/svg+xml" sizes="any" href="/img/icons/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/img/icons/favicon48.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/icons/favicon64.png" />
+    <link rel="manifest" href="/site.webmanifest" />
   </head>
 
   <body>
@@ -61,20 +73,14 @@
 
     <main>
       <div class="notice">
-        <p class="disclaimer">
-          Stran vsebuje zapiske predavanj in vaj za študij matematike na Fakulteti za matematiko in fiziko Univerze v
-          Ljubljani. Pravilnosti in popolnosti zapiskov ne zagotavljam, zato jih uporabljajte na lastno odgovornost.
-          Namenjeni so osebni nekomercialni uporabi.
-        </p>
+        <p class="disclaimer" itemprop="description">Stran vsebuje zapiske predavanj in vaj za študij matematike na
+          Fakulteti za matematiko in fiziko Univerze v Ljubljani. Pravilnosti in popolnosti zapiskov ne zagotavljam,
+          zato jih uporabljajte na lastno odgovornost. Namenjeni so osebni nekomercialni uporabi.</p>
 
-        <p class="fanclub">
-          Priporočam tudi ogled in članstvo v <a href="https://progklub.4a.si/pretnar/" target="_blank">Klubu oboževalk
-          Matije Pretnarja</a>.
-        </p>
+        <p class="fanclub">Priporočam tudi ogled in članstvo v <a href="https://progklub.4a.si/pretnar/"
+          target="_blank">Klubu oboževalk Matije Pretnarja</a>.</p>
 
-        <p class="author">
-          Avtor: Filip Štamcar
-        </p>
+        <p class="author">Avtor: <span itemprop="author">Filip Štamcar</span></p>
       </div>
 
       {{ render_tree(tree) }}

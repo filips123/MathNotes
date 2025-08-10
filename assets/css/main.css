@@ -75,20 +75,20 @@ a {
 .fanclub,
 .fanclub > * {
   animation: fanclub 400ms infinite;
-  cursor: url("/img/cursor-arrow-0.gif") 24 24, auto;
+  cursor: url("/img/cursors/cursor-arrow-0.gif") 24 24, auto;
 }
 
 @keyframes fanclub {
   0% {
-    cursor: url("/img/cursor-arrow-0.gif") 24 24, auto;
+    cursor: url("/img/cursors/cursor-arrow-0.gif") 24 24, auto;
   }
   25% {
-    cursor: url("/img/cursor-arrow-1.gif") 24 24, auto;
+    cursor: url("/img/cursors/cursor-arrow-1.gif") 24 24, auto;
   }
   50% {
-    cursor: url("/img/cursor-arrow-2.gif") 24 24, auto;
+    cursor: url("/img/cursors/cursor-arrow-2.gif") 24 24, auto;
   }
   75% {
-    cursor: url("/img/cursor-arrow-3.gif") 24 24, auto;
+    cursor: url("/img/cursors/cursor-arrow-3.gif") 24 24, auto;
   }
 }
