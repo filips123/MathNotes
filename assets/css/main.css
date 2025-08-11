@@ -28,9 +28,11 @@ a {
   margin-bottom: 0;
 }
 
-.disclaimer,
-.fanclub {
-  text-align: justify;
+@media (min-width: 500px) {
+  .disclaimer,
+  .fanclub {
+    text-align: justify;
+  }
 }
 
 .directory-title,

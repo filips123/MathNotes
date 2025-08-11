@@ -15,6 +15,7 @@ from watchdog.observers import Observer
 from utils.dates import format_datetime, parse_datetime
 from utils.directories import ensure_structure, wait_ready, walk_layout
 from utils.models import BaseConfig, BaseMetadata, FileMetadata
+from utils.pdf import set_pdf_metadata
 from utils.repaginate import repaginate_pdf
 from utils.samsung import extract_sdocx
 from utils.text import slugify
@@ -106,6 +107,8 @@ def handle_source(config: BaseConfig, index=True):
                         logging.warning("Failed to parse date from filename, using file modification date")
                         modified = time.localtime(os.path.getmtime(os.path.join(source, filename)))
 
+                    converted = time.localtime()
+
                     changes = True
 
                     if config.conversion.repaginate:
@@ -115,6 +118,16 @@ def handle_source(config: BaseConfig, index=True):
                             dpi=config.conversion.dpi,
                             height=config.conversion.height,
                         )
+
+                        set_pdf_metadata(
+                            filename=target_filename_pdf,
+                            title=title,
+                            author=config.meta.author,
+                            language=config.meta.language,
+                            modified=modified,
+                            converted=converted,
+                        )
+
                     else:
                         shutil.copy2(source_filename, target_filename_pdf)
 
@@ -126,7 +139,7 @@ def handle_source(config: BaseConfig, index=True):
                         slug=slug,
                         name=title,
                         modified=time.strftime("%Y-%m-%d %H:%M:%S", modified),
-                        converted=time.strftime("%Y-%m-%d %H:%M:%S"),
+                        converted=time.strftime("%Y-%m-%d %H:%M:%S", converted),
                         extensions=["pdf", "sdocx"] if sdocx else ["pdf"],
                     )
 
@@ -258,7 +271,7 @@ def render_index(config: BaseConfig):
     output = os.path.join(config.directories.target, "index.html")
 
     with open(output, "w", encoding="utf-8") as file:
-        file.write(template.render(tree=sort_tree(metadata.content)))
+        file.write(template.render(tree=sort_tree(metadata.content), meta=config.meta))
 
     copy_assets(config)
 

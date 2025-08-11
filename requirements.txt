@@ -8,28 +8,37 @@ annotated-types==0.7.0
     # via pydantic
 cffi==1.17.1
     # via cryptography
-charset-normalizer==3.4.2
+charset-normalizer==3.4.3
     # via pdfminer-six
 click==8.2.1
     # via -r requirements.in
 colorama==0.4.6
     # via click
-cryptography==45.0.4
+cryptography==45.0.6
     # via pdfminer-six
+deprecated==1.2.18
+    # via pikepdf
 jinja2==3.1.6
     # via -r requirements.in
+lxml==6.0.0
+    # via pikepdf
 markupsafe==3.0.2
     # via jinja2
-numpy==2.3.1
+numpy==2.3.2
     # via -r requirements.in
+packaging==25.0
+    # via pikepdf
 pdfminer-six==20250506
     # via pdfplumber
 pdfplumber==0.11.7
     # via -r requirements.in
-pillow==11.2.1
+pikepdf==9.10.2
+    # via -r requirements.in
+pillow==11.3.0
     # via
     #   -r requirements.in
     #   pdfplumber
+    #   pikepdf
 pycparser==2.22
     # via cffi
 pydantic==2.11.7
@@ -38,15 +47,15 @@ pydantic==2.11.7
     #   pydantic-yaml
 pydantic-core==2.33.2
     # via pydantic
-pydantic-yaml==1.5.1
+pydantic-yaml==1.6.0
     # via -r requirements.in
-pypdfium2==4.30.1
+pypdfium2==4.30.0
     # via pdfplumber
 ruamel-yaml==0.18.14
     # via pydantic-yaml
 ruamel-yaml-clib==0.2.12
     # via ruamel-yaml
-typing-extensions==4.14.0
+typing-extensions==4.14.1
     # via
     #   pydantic
     #   pydantic-core
@@ -58,3 +67,5 @@ unidecode==1.4.0
     # via -r requirements.in
 watchdog==6.0.0
     # via -r requirements.in
+wrapt==1.17.2
+    # via deprecated

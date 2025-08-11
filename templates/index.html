@@ -45,7 +45,7 @@
   </ul>
 {% endmacro %}
 
-<html lang="sl">
+<html lang="{{ meta.language }}">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -54,21 +54,22 @@
     <link rel="stylesheet" href="/css/simple.css" />
     <link rel="stylesheet" href="/css/main.css" />
 
-    <title>Matematični Zapiski</title>
-    <meta name="description" content="Zapiski predavanj in vaj za študij matematike na FMF" />
-    <meta name="keywords" content="matematika, zapiski, fmf, fakulteta za matematiko in fiziko" />
-    <meta name="author" content="Filip Štamcar" />
+    <title>{{ meta.title }}</title>
+    <meta name="description" content="{{ meta.description }}" />
+    <meta name="keywords" content="{{ meta.keywords|join(', ')}}" />
+    <meta name="author" content="{{ meta.author }}" />
 
     <link rel="canonical" href="https://math.filips.si/" />
     <link rel="icon" type="image/svg+xml" sizes="any" href="/img/icons/favicon.svg" />
     <link rel="icon" type="image/png" sizes="48x48" href="/img/icons/favicon48.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/img/icons/favicon64.png" />
+    <link rel="icon" type="image/png" sizes="64x64" href="/img/icons/favicon64.png" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="manifest" href="/site.webmanifest" />
   </head>
 
-  <body>
+  <body itemscope itemtype="https://schema.org/WebPage" itemid="https://math.filips.si/">
     <header>
-      <h1>Matematični Zapiski</h1>
+      <h1 itemprop="name">{{ meta.title }}</h1>
     </header>
 
     <main>
@@ -80,7 +81,7 @@
         <p class="fanclub">Priporočam tudi ogled in članstvo v <a href="https://progklub.4a.si/pretnar/"
           target="_blank">Klubu oboževalk Matije Pretnarja</a>.</p>
 
-        <p class="author">Avtor: <span itemprop="author">Filip Štamcar</span></p>
+        <p class="author">Avtor: <span itemprop="author">{{ meta.author }}</span></p>
       </div>
 
       {{ render_tree(tree) }}

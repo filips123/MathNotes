@@ -5,6 +5,14 @@ from typing import Literal
 from pydantic import BaseModel, Field, RootModel
 
 
+class MetaConfig(BaseModel):
+    title: str = "Matematični Zapiski"
+    description: str = "Zapiski predavanj in vaj za študij matematike na FMF"
+    keywords: list[str] = ["matematika", "zapiski", "fmf", "fakulteta za matematiko in fiziko"]
+    author: str = "Filip Štamcar"
+    language: str = "sl"
+
+
 class HookConfig(BaseModel):
     pre: str | None = None
     post: str | None = None
@@ -29,6 +37,7 @@ class LayoutConfig(BaseModel):
 
 
 class BaseConfig(BaseModel):
+    meta: MetaConfig = Field(default_factory=MetaConfig)
     hooks: HookConfig = Field(default_factory=HookConfig)
     conversion: ConversionConfig = Field(default_factory=ConversionConfig)
     directories: DirectoriesConfig
