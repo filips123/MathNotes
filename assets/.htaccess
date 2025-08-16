@@ -7,3 +7,8 @@ RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 # Redirect www to non-www
 RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
 RewriteRule ^ https://%1%{REQUEST_URI} [L,R=301]
+
+# Cache PDF and SDOCX files
+<FilesMatch "\.(pdf|sdocx)$">
+	Header set Cache-Control "max-age=3600, public, must-revalidate"
+</FilesMatch>

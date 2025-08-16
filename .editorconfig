@@ -21,6 +21,11 @@ indent_size = 4
 [*.toml]
 indent_size = 4
 
+# Configs
+[.htaccess]
+indent_style = tab
+indent_size = 4
+
 # == Web
 
 # HTML

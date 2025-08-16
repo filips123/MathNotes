@@ -45,6 +45,21 @@
   </ul>
 {% endmacro %}
 
+{% macro render_toc(tree, path="") %}
+  <ul>
+    {% for key, node in tree.items() %}
+      {% if node.type == "directory" %}
+        {% set node_id = (path ~ '/' ~ node.slug).lstrip('/').replace('/', '-') %}
+        <li><a href="#{{ node_id }}">{{ node.name }}</a>
+          {% if node.content %}
+            {{ render_toc(node.content, path ~ '/' ~ node.slug) }}
+          {% endif %}
+        </li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+{% endmacro %}
+
 <html lang="{{ meta.language }}">
   <head>
     <meta charset="utf-8" />
@@ -83,6 +98,13 @@
 
         <p class="author">Avtor: <span itemprop="author">{{ meta.author }}</span></p>
       </div>
+
+      <nav class="toc">
+        <details open>
+          <summary>Kazalo</summary>
+          {{ render_toc(tree) }}
+        </details>
+      </nav>
 
       {{ render_tree(tree) }}
     </main>

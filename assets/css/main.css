@@ -35,6 +35,18 @@ a {
   }
 }
 
+.toc {
+  margin-bottom: 2rem;
+}
+
+.toc > details {
+  margin-bottom: 0;
+}
+
+.toc > details > ul {
+  padding-bottom: 0.7rem;
+}
+
 .directory-title,
 .file-title {
   font-weight: bold;
