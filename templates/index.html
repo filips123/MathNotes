@@ -99,7 +99,24 @@
         <p class="author">Avtor: <span itemprop="author">{{ meta.author }}</span></p>
       </div>
 
-      <nav class="toc">
+      <nav class="navigation links">
+        <details open>
+          <summary>Drugi Zapiski</summary>
+          <p>Nekaj spletni strani z drugimi zapiski za študij matematike:</p>
+          <ul>
+            {% set links = [
+              "https://83433121.xyz/zapiski/",
+              "https://vida26365.github.io/",
+              "https://k3ap.github.io/",
+            ] %}
+            {% for url in links %}
+              <li><a href="{{ url }}" target="_blank">{{ url }}</a></li>
+            {% endfor %}
+          </ul>
+        </details>
+      </nav>
+
+      <nav class="navigation toc">
         <details open>
           <summary>Kazalo</summary>
           {{ render_toc(tree) }}

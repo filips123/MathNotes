@@ -3,8 +3,8 @@ main {
 }
 
 p {
-  margin-top: 16px;
-  margin-bottom: 16px;
+  margin-top: 8px;
+  margin-bottom: 8px;
 }
 
 ul {
@@ -35,15 +35,15 @@ a {
   }
 }
 
-.toc {
+.navigation {
   margin-bottom: 2rem;
 }
 
-.toc > details {
+.navigation > details {
   margin-bottom: 0;
 }
 
-.toc > details > ul {
+.navigation > details > ul {
   padding-bottom: 0.7rem;
 }
 
