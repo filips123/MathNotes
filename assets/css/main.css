@@ -47,6 +47,10 @@ a {
   padding-bottom: 0.7rem;
 }
 
+.directory-title {
+  margin-top: 12px;
+}
+
 .directory-title,
 .file-title {
   font-weight: bold;

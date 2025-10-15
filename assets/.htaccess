@@ -10,5 +10,5 @@ RewriteRule ^ https://%1%{REQUEST_URI} [L,R=301]
 
 # Cache PDF and SDOCX files
 <FilesMatch "\.(pdf|sdocx)$">
-	Header set Cache-Control "max-age=3600, public, must-revalidate"
+	Header set Cache-Control "max-age=900, public"
 </FilesMatch>
