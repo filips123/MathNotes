@@ -1,3 +1,5 @@
+/* Base */
+
 main {
   padding: 0;
 }
@@ -20,6 +22,8 @@ a {
   text-decoration: none;
 }
 
+/* Notice */
+
 .notice > :first-child {
   margin-top: 0;
 }
@@ -28,12 +32,7 @@ a {
   margin-bottom: 0;
 }
 
-@media (min-width: 500px) {
-  .disclaimer,
-  .fanclub {
-    text-align: justify;
-  }
-}
+/* Navigation */
 
 .navigation {
   margin-bottom: 2rem;
@@ -46,6 +45,8 @@ a {
 .navigation > details > ul {
   padding-bottom: 0.7rem;
 }
+
+/* Entry Information */
 
 .directory-title {
   margin-top: 12px;
@@ -79,35 +80,48 @@ a {
 
 .directory-description,
 .file-description {
+  padding-left: 20px;
   font-size: 1.0em;
 }
 
 .file-links {
+  padding-left: 20px;
   font-size: 0.9em;
 }
 
 .file-dates {
+  padding-left: 20px;
   font-size: 0.9em;
 }
+
+/* About Box */
+
+@media (min-width: 500px) {
+  .about {
+    text-align: justify;
+  }
+}
+
+/* Awesome Cursor */
 
 .fanclub,
 .fanclub > * {
   animation: fanclub 400ms infinite;
-  cursor: url("/img/cursors/cursor-arrow-0.gif") 24 24, auto;
+  cursor: url("/img/cursors/cursor-normal-0.gif") 24 24, auto;
 }
 
 @keyframes fanclub {
   0% {
-    cursor: url("/img/cursors/cursor-arrow-0.gif") 24 24, auto;
+    cursor: url("/img/cursors/cursor-normal-0.gif") 24 24, auto;
   }
   25% {
-    cursor: url("/img/cursors/cursor-arrow-1.gif") 24 24, auto;
+    cursor: url("/img/cursors/cursor-normal-1.gif") 24 24, auto;
   }
   50% {
-    cursor: url("/img/cursors/cursor-arrow-2.gif") 24 24, auto;
+    cursor: url("/img/cursors/cursor-normal-2.gif") 24 24, auto;
   }
   75% {
-    cursor: url("/img/cursors/cursor-arrow-3.gif") 24 24, auto;
+    cursor: url("/img/cursors/cursor-normal-3.gif") 24 24, auto;
   }
 }
 

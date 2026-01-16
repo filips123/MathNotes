@@ -16,7 +16,7 @@ def set_pdf_metadata(
     """Set metadata for a PDF file."""
 
     with pikepdf.Pdf.open(filename, allow_overwriting_input=True) as pdf:
-        with pdf.open_metadata() as meta:
+        with pdf.open_metadata(set_pikepdf_as_editor=False) as meta:
             if title is not None:
                 meta["dc:title"] = title
             if description is not None:

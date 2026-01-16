@@ -71,7 +71,7 @@
 
     <title>{{ meta.title }}</title>
     <meta name="description" content="{{ meta.description }}" />
-    <meta name="keywords" content="{{ meta.keywords|join(', ')}}" />
+    <meta name="keywords" content="{{ meta.keywords|join(', ') }}" />
     <meta name="author" content="{{ meta.author }}" />
 
     <link rel="canonical" href="https://math.filips.si/" />
@@ -88,8 +88,8 @@
     </header>
 
     <main>
-      <div class="notice">
-        <p class="disclaimer" itemprop="description">Stran vsebuje zapiske predavanj in vaj za študij matematike na
+      <div class="notice about">
+        <p class="description" itemprop="description">Stran vsebuje zapiske predavanj in vaj za študij matematike na
           Fakulteti za matematiko in fiziko Univerze v Ljubljani. Pravilnosti in popolnosti zapiskov ne zagotavljam,
           zato jih uporabljajte na lastno odgovornost. Namenjeni so osebni nekomercialni uporabi.</p>
 
@@ -99,26 +99,23 @@
         <p class="author">Avtor: <span itemprop="author">{{ meta.author }}</span></p>
       </div>
 
-      <nav class="navigation links">
-        <details open>
-          <summary>Drugi Zapiski</summary>
-          <p>Nekaj spletni strani z drugimi zapiski za študij matematike:</p>
-          <ul>
-            {% set links = [
-              "https://83433121.xyz/zapiski/",
-              "https://vida26365.github.io/",
-              "https://k3ap.github.io/",
-              "https://makovec.si/faks",
-            ] %}
-            {% for url in links %}
-              <li><a href="{{ url }}" target="_blank">{{ url }}</a></li>
-            {% endfor %}
-          </ul>
-        </details>
-      </nav>
+      <div class="notice links">
+        <p>Nekaj spletni strani z drugimi zapiski za študij matematike:</p>
+        <ul>
+          {% set links = [
+            "https://83433121.xyz/zapiski/",
+            "https://vida26365.github.io/",
+            "https://k3ap.github.io/",
+            "https://makovec.si/faks",
+          ] %}
+          {% for url in links %}
+            <li><a href="{{ url }}" target="_blank">{{ url }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
 
       <nav class="navigation toc">
-        <details open>
+        <details>
           <summary>Kazalo</summary>
           {{ render_toc(tree) }}
         </details>
