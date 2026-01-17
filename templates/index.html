@@ -1,127 +1,50 @@
 <!DOCTYPE html>
 
-{% macro render_tree(tree, path="") %}
-  <ul>
-    {% for key, node in tree.items() %}
-      <li>
-        {% set node_id = (path ~ '/' ~ node.slug).lstrip('/').replace('/', '-') %}
-        {% if node.type == "directory" %}
-          <div itemscope itemtype="https://schema.org/Collection" itemid="#{{ node_id }}">
-            <p class="directory-title" id="{{ node_id }}">
-              <a class="directory-link" href="#{{ node_id }}" itemprop="url">
-                <span class="directory-name" itemprop="name">{{ node.name }}</span>
-                <span class="directory-hash" aria-hidden="true">#</span>
-              </a>
-            </p>
-            {% if node.description %}
-              <p class="directory-description" itemprop="description">{{ node.description }}</p>
-            {% endif %}
-            {{ render_tree(node.content, path ~ "/" ~ node.slug) }}
-          </div>
-        {% elif node.type == "file" %}
-          <div itemscope itemtype="https://schema.org/Manuscript" itemid="#{{ node_id }}">
-            <p class="file-title" id="{{ node_id }}">
-              <a class="file-link" href="{{ (path ~ '/' ~ node.slug ~ '.pdf').lstrip('/') }}" itemprop="url">
-                <span class="file-name" itemprop="name">{{ node.name }}</span>
-              </a>
-            </p>
-            {% if node.description %}
-              <p class="file-description" itemprop="description">{{ node.description }}</p>
-            {% endif %}
-            <p class="file-links">
-              {% for extension in node.extensions %}
-                <a href="{{ (path ~ '/' ~ node.slug ~ '.' ~ extension).lstrip('/') }}">{{ extension.upper() }}</a>
-                {% if not loop.last %} | {% endif %}
-              {% endfor %}
-            </p>
-            <p class="file-dates">
-              {% if node.modified %}Posodobljeno: <span itemprop="dateModified" content="{{ node.modified }}">{{ node.modified|parse_datetime|format_datetime }}</span><br />{% endif %}
-              {% if node.converted %}Obdelano: <span>{{ node.converted|parse_datetime|format_datetime }}</span>{% endif %}
-            </p>
-          </div>
-        {% endif %}
-      </li>
-    {% endfor %}
-  </ul>
-{% endmacro %}
+{% from "macros.html" import render_tree, render_toc %}
 
-{% macro render_toc(tree, path="") %}
-  <ul>
-    {% for key, node in tree.items() %}
-      {% if node.type == "directory" %}
-        {% set node_id = (path ~ '/' ~ node.slug).lstrip('/').replace('/', '-') %}
-        <li><a href="#{{ node_id }}">{{ node.name }}</a>
-          {% if node.content %}
-            {{ render_toc(node.content, path ~ '/' ~ node.slug) }}
-          {% endif %}
-        </li>
-      {% endif %}
-    {% endfor %}
-  </ul>
-{% endmacro %}
+{% extends "base.html" %}
 
-<html lang="{{ meta.language }}">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+{% block header %}
+  <h1 itemprop="name">{{ meta.title }}</h1>
+{% endblock %}
 
-    <link rel="stylesheet" href="/css/simple.css" />
-    <link rel="stylesheet" href="/css/main.css" />
+{% block content %}
+  <div class="notice about">
+    <p class="description" itemprop="description">Stran vsebuje zapiske predavanj in vaj za študij matematike na
+      Fakulteti za matematiko in fiziko Univerze v Ljubljani. Pravilnosti in popolnosti zapiskov ne zagotavljam,
+      zato jih uporabljajte na lastno odgovornost. Namenjeni so osebni nekomercialni uporabi.</p>
 
-    <title>{{ meta.title }}</title>
-    <meta name="description" content="{{ meta.description }}" />
-    <meta name="keywords" content="{{ meta.keywords|join(', ') }}" />
-    <meta name="author" content="{{ meta.author }}" />
+    <p class="fanclub">Priporočam tudi ogled in članstvo v <a href="https://progklub.4a.si/pretnar/"
+      target="_blank">Klubu oboževalk <span class="hearts">Matije Pretnarja</span></a>.</p>
 
-    <link rel="canonical" href="https://math.filips.si/" />
-    <link rel="icon" type="image/svg+xml" sizes="any" href="/img/icons/favicon.svg" />
-    <link rel="icon" type="image/png" sizes="48x48" href="/img/icons/favicon48.png" />
-    <link rel="icon" type="image/png" sizes="64x64" href="/img/icons/favicon64.png" />
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <link rel="manifest" href="/site.webmanifest" />
-  </head>
+    <p class="author">Avtor: <span itemprop="author">{{ meta.author }}</span></p>
+  </div>
 
-  <body itemscope itemtype="https://schema.org/WebPage" itemid="https://math.filips.si/">
-    <header>
-      <h1 itemprop="name">{{ meta.title }}</h1>
-    </header>
+  <div class="notice links">
+    <p>Nekaj spletni strani z drugimi zapiski za študij matematike:</p>
+    <ul>
+      {% set links = [
+        "https://83433121.xyz/zapiski/",
+        "https://vida26365.github.io/",
+        "https://k3ap.github.io/",
+        "https://makovec.si/faks",
+      ] %}
+      {% for url in links %}
+        <li><a href="{{ url }}" target="_blank">{{ url }}</a></li>
+      {% endfor %}
+    </ul>
+  </div>
 
-    <main>
-      <div class="notice about">
-        <p class="description" itemprop="description">Stran vsebuje zapiske predavanj in vaj za študij matematike na
-          Fakulteti za matematiko in fiziko Univerze v Ljubljani. Pravilnosti in popolnosti zapiskov ne zagotavljam,
-          zato jih uporabljajte na lastno odgovornost. Namenjeni so osebni nekomercialni uporabi.</p>
-
-        <p class="fanclub">Priporočam tudi ogled in članstvo v <a href="https://progklub.4a.si/pretnar/"
-          target="_blank">Klubu oboževalk <span class="hearts">Matije Pretnarja</span></a>.</p>
-
-        <p class="author">Avtor: <span itemprop="author">{{ meta.author }}</span></p>
-      </div>
-
-      <div class="notice links">
-        <p>Nekaj spletni strani z drugimi zapiski za študij matematike:</p>
-        <ul>
-          {% set links = [
-            "https://83433121.xyz/zapiski/",
-            "https://vida26365.github.io/",
-            "https://k3ap.github.io/",
-            "https://makovec.si/faks",
-          ] %}
-          {% for url in links %}
-            <li><a href="{{ url }}" target="_blank">{{ url }}</a></li>
-          {% endfor %}
-        </ul>
-      </div>
-
-      <nav class="navigation toc">
-        <details>
-          <summary>Kazalo</summary>
-          {{ render_toc(tree) }}
-        </details>
-      </nav>
+  <nav class="navigation toc">
+    <details>
+      <summary>Kazalo</summary>
+      {{ render_toc(tree) }}
+    </details>
+  </nav>
 
       {{ render_tree(tree) }}
     </main>
   </body>
 </html>
+  {{ render_tree(tree) }}
+{% endblock %}

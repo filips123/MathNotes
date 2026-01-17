@@ -1,0 +1,59 @@
+{% macro render_tree(tree, path="") %}
+  <ul>
+    {% for key, node in tree.items() %}
+      <li>
+        {% set node_id = (path ~ '/' ~ node.slug).lstrip('/').replace('/', '-') %}
+        {% if node.type == "directory" %}
+          <div itemscope itemtype="https://schema.org/Collection" itemid="#{{ node_id }}">
+            <p class="directory-title" id="{{ node_id }}">
+              <a class="directory-link" href="#{{ node_id }}" itemprop="url">
+                <span class="directory-name" itemprop="name">{{ node.name }}</span>
+                <span class="directory-hash" aria-hidden="true">#</span>
+              </a>
+            </p>
+            {% if node.description %}
+              <p class="directory-description" itemprop="description">{{ node.description }}</p>
+            {% endif %}
+            {{ render_tree(node.content, path ~ "/" ~ node.slug) }}
+          </div>
+        {% elif node.type == "file" %}
+          <div itemscope itemtype="https://schema.org/Manuscript" itemid="#{{ node_id }}">
+            <p class="file-title" id="{{ node_id }}">
+              <a class="file-link" href="{{ (path ~ '/' ~ node.slug ~ '.pdf').lstrip('/') }}" itemprop="url">
+                <span class="file-name" itemprop="name">{{ node.name }}</span>
+              </a>
+            </p>
+            {% if node.description %}
+              <p class="file-description" itemprop="description">{{ node.description }}</p>
+            {% endif %}
+            <p class="file-links">
+              {% for extension in node.extensions %}
+                <a href="{{ (path ~ '/' ~ node.slug ~ '.' ~ extension).lstrip('/') }}">{{ extension.upper() }}</a>
+                {% if not loop.last %} | {% endif %}
+              {% endfor %}
+            </p>
+            <p class="file-dates">
+              {% if node.modified %}Posodobljeno: <span itemprop="dateModified" content="{{ node.modified }}">{{ node.modified|parse_datetime|format_datetime }}</span><br />{% endif %}
+              {% if node.converted %}Obdelano: <span>{{ node.converted|parse_datetime|format_datetime }}</span>{% endif %}
+            </p>
+          </div>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+{% endmacro %}
+
+{% macro render_toc(tree, path="") %}
+  <ul>
+    {% for key, node in tree.items() %}
+      {% if node.type == "directory" %}
+        {% set node_id = (path ~ '/' ~ node.slug).lstrip('/').replace('/', '-') %}
+        <li><a href="#{{ node_id }}">{{ node.name }}</a>
+          {% if node.content %}
+            {{ render_toc(node.content, path ~ '/' ~ node.slug) }}
+          {% endif %}
+        </li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+{% endmacro %}
