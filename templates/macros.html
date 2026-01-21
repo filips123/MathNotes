@@ -1,23 +1,36 @@
-{% macro render_tree(tree, path="") %}
+{% macro render_tree(tree, path="", depth=0, maxdepth=-1) %}
+  {% set unfold = maxdepth != -1 and depth >= maxdepth %}
   <ul>
     {% for key, node in tree.items() %}
       <li>
-        {% set node_id = (path ~ '/' ~ node.slug).lstrip('/').replace('/', '-') %}
+        {% set node_id = (path ~ '/' ~ node.slug).lstrip('/') %}
+
         {% if node.type == "directory" %}
-          <div itemscope itemtype="https://schema.org/Collection" itemid="#{{ node_id }}">
+          {% if unfold %}
+            {% set node_path = '#' ~ node_id %}
+          {% else %}
+            {% set node_path = node_id ~ '/' %}
+          {% endif %}
+
+          <div itemscope itemtype="https://schema.org/Collection" itemid="{{ node_path }}">
             <p class="directory-title" id="{{ node_id }}">
-              <a class="directory-link" href="#{{ node_id }}" itemprop="url">
+              <a class="directory-{% if unfold %}anchor{% else %}link{% endif %}" href="{{ node_path }}" itemprop="url">
                 <span class="directory-name" itemprop="name">{{ node.name }}</span>
-                <span class="directory-hash" aria-hidden="true">#</span>
+                {% if unfold %}<span class="directory-hash" aria-hidden="true">#</span>{% endif %}
               </a>
             </p>
             {% if node.description %}
               <p class="directory-description" itemprop="description">{{ node.description }}</p>
             {% endif %}
-            {{ render_tree(node.content, path ~ "/" ~ node.slug) }}
+            {% if unfold %}
+              {{ render_tree(node.content, path ~ "/" ~ node.slug, depth + 1, maxdepth) }}
+            {% endif %}
           </div>
+
         {% elif node.type == "file" %}
-          <div itemscope itemtype="https://schema.org/Manuscript" itemid="#{{ node_id }}">
+          {% set node_path = '#' ~ node_id %}
+
+          <div itemscope itemtype="https://schema.org/Manuscript" itemid="{{ node_path }}">
             <p class="file-title" id="{{ node_id }}">
               <a class="file-link" href="{{ (path ~ '/' ~ node.slug ~ '.pdf').lstrip('/') }}" itemprop="url">
                 <span class="file-name" itemprop="name">{{ node.name }}</span>
@@ -43,17 +56,39 @@
   </ul>
 {% endmacro %}
 
-{% macro render_toc(tree, path="") %}
+{% macro render_toc(tree, path="/", depth=0, maxdepth=-1) %}
   <ul>
     {% for key, node in tree.items() %}
       {% if node.type == "directory" %}
-        {% set node_id = (path ~ '/' ~ node.slug).lstrip('/').replace('/', '-') %}
-        <li><a href="#{{ node_id }}">{{ node.name }}</a>
+        {% if maxdepth == -1 or depth < maxdepth %}
+          {% set node_path = path ~ node.slug ~ '/' %}
+        {% elif depth == maxdepth %}
+          {% set node_path = path ~ '#' ~ node.slug %}
+        {% else %}
+          {% set node_path = path ~ '/' ~ node.slug %}
+        {% endif %}
+        <li><a href="{{ node_path }}">{{ node.name }}</a>
           {% if node.content %}
-            {{ render_toc(node.content, path ~ '/' ~ node.slug) }}
+            {{ render_toc(node.content, (path ~ node.slug ~ '/'), depth + 1, maxdepth) }}
           {% endif %}
         </li>
       {% endif %}
     {% endfor %}
   </ul>
+{% endmacro %}
+
+{% macro render_breadcrumbs(breadcrumbs) %}
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <ol itemscope itemtype="https://schema.org/BreadcrumbList">
+      {% for breadcrumb in breadcrumbs %}
+        <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+          <a itemprop="item" href="{{ breadcrumb.url }}" {% if loop.last %}aria-current="page"{% endif %}>
+            <span>{% if loop.first %}Domov{% else %}{{ breadcrumb.name }}{% endif %}</span>
+            <meta itemprop="name" content="{{ breadcrumb.name }}" />
+          </a>
+          <meta itemprop="position" content="{{ loop.index }}" />
+        </li>
+      {% endfor %}
+    </ol>
+  </nav>
 {% endmacro %}

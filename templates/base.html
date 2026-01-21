@@ -9,12 +9,12 @@
     <link rel="stylesheet" href="/css/simple.css" />
     <link rel="stylesheet" href="/css/main.css" />
 
-    <title>{{ meta.title }}</title>
+    <title>{% block title %}{{ meta.title }}{% endblock %}</title>
     <meta name="description" content="{{ meta.description }}" />
     <meta name="keywords" content="{{ meta.keywords|join(', ') }}" />
     <meta name="author" content="{{ meta.author }}" />
 
-    <link rel="canonical" href="{{ meta.url }}" />
+    <link rel="canonical" href="{% block canonical %}{{ meta.base }}{% endblock %}" />
     <link rel="icon" type="image/svg+xml" sizes="any" href="/img/icons/favicon.svg" />
     <link rel="icon" type="image/png" sizes="48x48" href="/img/icons/favicon48.png" />
     <link rel="icon" type="image/png" sizes="64x64" href="/img/icons/favicon64.png" />
@@ -22,7 +22,7 @@
     <link rel="manifest" href="/site.webmanifest" />
   </head>
 
-  <body itemscope itemtype="https://schema.org/WebPage" itemid="{{ meta.url }}">
+  <body itemscope itemtype="{% block itemtype %}https://schema.org/WebPage{% endblock %}" itemid="">
     <header>
       {% block header %}{% endblock %}
     </header>

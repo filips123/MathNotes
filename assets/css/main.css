@@ -46,6 +46,23 @@ a {
   padding-bottom: 0.7rem;
 }
 
+/* Breadcrumbs */
+
+.breadcrumbs a {
+  margin: 0 0.5rem;
+  padding: 0.2rem 0.5rem;
+  border: 0 !important;
+  background: initial !important;
+}
+
+.breadcrumbs li {
+  display: contents;
+}
+
+.breadcrumbs li:not(:last-child)::after {
+  content: "/";
+}
+
 /* Entry Information */
 
 .directory-title {
@@ -58,8 +75,8 @@ a {
   font-size: 1.2em;
 }
 
-.directory-link,
-.directory-link:visited {
+.directory-anchor,
+.directory-anchor:visited {
   color: inherit;
   display: flex;
 }
@@ -72,8 +89,8 @@ a {
   transition: opacity 0.2s;
 }
 
-.directory-link:hover .directory-hash,
-.directory-link:focus-within .directory-hash,
+.directory-anchor:hover .directory-hash,
+.directory-anchor:focus-within .directory-hash,
 .directory-title:target .directory-hash {
   opacity: 1;
 }

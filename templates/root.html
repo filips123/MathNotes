@@ -1,8 +1,6 @@
-<!DOCTYPE html>
+{% extends "base.html" %}
 
 {% from "macros.html" import render_tree, render_toc %}
-
-{% extends "base.html" %}
 
 {% block header %}
   <h1 itemprop="name">{{ meta.title }}</h1>
@@ -35,16 +33,14 @@
     </ul>
   </div>
 
-  <nav class="navigation toc">
-    <details>
-      <summary>Kazalo</summary>
-      {{ render_toc(tree) }}
-    </details>
-  </nav>
+  {% if index.toc %}
+    <nav class="navigation toc">
+      <details>
+        <summary>Kazalo</summary>
+        {{ render_toc(tree, maxdepth=index.depth) }}
+      </details>
+    </nav>
+  {% endif %}
 
-      {{ render_tree(tree) }}
-    </main>
-  </body>
-</html>
-  {{ render_tree(tree) }}
+  {{ render_tree(tree, maxdepth=index.depth) }}
 {% endblock %}

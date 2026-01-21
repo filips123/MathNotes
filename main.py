@@ -5,15 +5,15 @@ import re
 import shutil
 import sys
 import time
+from urllib.parse import urljoin
 
 import click
-from jinja2 import Environment, FileSystemLoader
 from pydantic_yaml import parse_yaml_file_as
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 
-from utils.dates import format_datetime, parse_datetime
 from utils.directories import ensure_structure, wait_ready, walk_layout
+from utils.jinja import prepare_environment
 from utils.models import BaseConfig, BaseMetadata, FileMetadata
 from utils.pdf import set_pdf_metadata
 from utils.repaginate import repaginate_pdf
@@ -252,28 +252,107 @@ def render_index(config: BaseConfig):
     if not os.path.isfile(metafile):
         return
 
-    logging.info("Rendering index...")
+    logging.info("Rendering root index: index.html")
 
     with open(metafile, encoding="utf-8") as file:
         metadata = BaseMetadata.model_validate_json(file.read())
 
-    dirname = os.path.dirname(__file__)
-
-    loader = FileSystemLoader(searchpath=os.path.join(dirname, "templates"))
-    environment = Environment(loader=loader, autoescape=True)
-    environment.filters["slugify"] = slugify
-    environment.filters["parse_datetime"] = parse_datetime
-    environment.filters["format_datetime"] = format_datetime
-    environment.trim_blocks = True
-    environment.lstrip_blocks = True
-
-    template = environment.get_template("index.html")
+    environment = prepare_environment()
+    template = environment.get_template("root.html")
     output = os.path.join(config.directories.target, "index.html")
 
     with open(output, "w", encoding="utf-8") as file:
-        file.write(template.render(tree=sort_tree(metadata.content), meta=config.meta))
+        file.write(template.render(tree=sort_tree(metadata.content), meta=config.meta, index=config.index))
+
+    render_subindexes(config)
 
     copy_assets(config)
+
+
+def render_subindexes(config: BaseConfig):
+    metafile = os.path.join(config.directories.target, "metadata.json")
+
+    if not os.path.isfile(metafile):
+        return
+
+    with open(metafile, encoding="utf-8") as file:
+        metadata = BaseMetadata.model_validate_json(file.read())
+
+    environment = prepare_environment()
+    template = environment.get_template("directory.html")
+
+    def generate_subindexes(tree: dict, path: str = "", depth: int = 0, trail: list | None = None):
+        if trail is None:
+            trail = []
+
+        for slug, node in tree.items():
+            if node.type != "directory":
+                continue
+
+            node_path = os.path.join(path, slug)
+            current_depth = depth + 1
+
+            if config.index.depth != -1 and current_depth > config.index.depth:
+                continue
+
+            remaining_depth = -1 if config.index.depth == -1 else config.index.depth - current_depth
+
+            index_dir = os.path.join(config.directories.target, node_path)
+            os.makedirs(index_dir, exist_ok=True)
+
+            index_path = os.path.join(index_dir, "index.html")
+
+            index_url = urljoin(config.meta.base, node_path.replace(os.sep, "/"))
+            if not index_url.endswith("/"):
+                index_url += "/"
+
+            breadcrumbs = [
+                {"name": config.meta.title, "url": config.meta.base},
+                *trail,
+                {"name": node.name, "url": index_url},
+            ]
+
+            logging.info(
+                "Rendering subindex: %s (depth=%d, remaining=%d)",
+                os.path.relpath(index_path, config.directories.target),
+                current_depth,
+                remaining_depth,
+            )
+
+            with open(index_path, "w", encoding="utf-8") as file:
+                file.write(
+                    template.render(
+                        tree=sort_tree(node.content),
+                        name=node.name,
+                        description=node.description,
+                        meta=config.meta,
+                        index=config.index,
+                        current_depth=current_depth,
+                        remaining_depth=remaining_depth,
+                        canonical_url=index_url,
+                        breadcrumbs=breadcrumbs,
+                    )
+                )
+
+            if node.content:
+                # Reconstruct trail separately to avoid problems with mutability
+                new_trail = [*trail, {"name": node.name, "url": index_url}]
+                generate_subindexes(node.content, node_path, current_depth, new_trail)
+
+    generate_subindexes(metadata.content)
+
+    if config.index.depth == -1:
+        return
+
+    # Cleanup indexes that are deeper than configured
+    root = config.directories.target
+    for dirpath, _, _ in os.walk(root):
+        rel = os.path.relpath(dirpath, root)
+        depth = 0 if rel == "." else len(rel.split(os.sep))
+        if depth > config.index.depth:
+            if os.path.isfile(os.path.join(dirpath, "index.html")):
+                logging.info("Deleting subindex: %s", os.path.join(rel, "index.html"))
+                os.remove(os.path.join(dirpath, "index.html"))
 
 
 def copy_assets(config: BaseConfig):
@@ -304,7 +383,7 @@ def copy_assets(config: BaseConfig):
             if os.path.isfile(os.path.join(assets, current, name)):
                 continue
 
-            logging.info("Deleting %s...", os.path.join(current, name))
+            logging.info("Deleting asset: %s", os.path.join(current, name))
             os.remove(os.path.join(target, current, name))
 
     # Cleanup excessive files in target

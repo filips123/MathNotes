@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% from "macros.html" import render_tree, render_breadcrumbs %}
+
+{% block title %}{{ name }} – {{ meta.title }}{% endblock %}
+
+{% block canonical %}{{ canonical_url }}{% endblock %}
+
+{% block itemtype %}https://schema.org/CollectionPage{% endblock %}
+
+{% block header %}
+  {% if index.breadcrumbs %}
+    {{ render_breadcrumbs(breadcrumbs) }}
+  {% endif %}
+  <h1 itemprop="name">{{ name }}</h1>
+  {% if description %}
+    <span itemprop="description">{{ description }}</span>
+  {% endif %}
+  <meta itemprop="author" content="{{ meta.author }}" />
+{% endblock %}
+
+{% block content %}
+  {{ render_tree(tree, maxdepth=remaining_depth) }}
+{% endblock %}

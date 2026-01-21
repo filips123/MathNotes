@@ -11,6 +11,7 @@ class MetaConfig(BaseModel):
     keywords: list[str] = ["matematika", "zapiski", "fmf", "fakulteta za matematiko in fiziko"]
     author: str = "Filip Štamcar"
     language: str = "sl"
+    base: str = "https://math.filips.si/"
 
 
 class HookConfig(BaseModel):
@@ -22,6 +23,12 @@ class ConversionConfig(BaseModel):
     repaginate: bool = True
     dpi: int | float = 300
     height: int | float = 297
+
+
+class IndexConfig(BaseModel):
+    toc: bool = True
+    breadcrumbs: bool = True
+    depth: int = -1
 
 
 class DirectoriesConfig(BaseModel):
@@ -40,6 +47,7 @@ class BaseConfig(BaseModel):
     meta: MetaConfig = Field(default_factory=MetaConfig)
     hooks: HookConfig = Field(default_factory=HookConfig)
     conversion: ConversionConfig = Field(default_factory=ConversionConfig)
+    index: IndexConfig = Field(default_factory=IndexConfig)
     directories: DirectoriesConfig
     layouts: list[LayoutConfig]
 

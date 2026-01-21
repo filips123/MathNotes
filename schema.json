@@ -44,6 +44,11 @@
         "target": {
           "title": "Target",
           "type": "string"
+        },
+        "cleanup": {
+          "default": true,
+          "title": "Cleanup",
+          "type": "boolean"
         }
       },
       "required": [
@@ -83,6 +88,27 @@
       "title": "HookConfig",
       "type": "object"
     },
+    "IndexConfig": {
+      "properties": {
+        "toc": {
+          "default": true,
+          "title": "Toc",
+          "type": "boolean"
+        },
+        "breadcrumbs": {
+          "default": true,
+          "title": "Breadcrumbs",
+          "type": "boolean"
+        },
+        "depth": {
+          "default": -1,
+          "title": "Depth",
+          "type": "integer"
+        }
+      },
+      "title": "IndexConfig",
+      "type": "object"
+    },
     "LayoutConfig": {
       "properties": {
         "name": {
@@ -108,14 +134,64 @@
       ],
       "title": "LayoutConfig",
       "type": "object"
+    },
+    "MetaConfig": {
+      "properties": {
+        "title": {
+          "default": "Matemati\u010dni Zapiski",
+          "title": "Title",
+          "type": "string"
+        },
+        "description": {
+          "default": "Zapiski predavanj in vaj za \u0161tudij matematike na FMF",
+          "title": "Description",
+          "type": "string"
+        },
+        "keywords": {
+          "default": [
+            "matematika",
+            "zapiski",
+            "fmf",
+            "fakulteta za matematiko in fiziko"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "title": "Keywords",
+          "type": "array"
+        },
+        "author": {
+          "default": "Filip \u0160tamcar",
+          "title": "Author",
+          "type": "string"
+        },
+        "language": {
+          "default": "sl",
+          "title": "Language",
+          "type": "string"
+        },
+        "base": {
+          "default": "https://math.filips.si/",
+          "title": "Base",
+          "type": "string"
+        }
+      },
+      "title": "MetaConfig",
+      "type": "object"
     }
   },
   "properties": {
+    "meta": {
+      "$ref": "#/$defs/MetaConfig"
+    },
     "hooks": {
       "$ref": "#/$defs/HookConfig"
     },
     "conversion": {
       "$ref": "#/$defs/ConversionConfig"
+    },
+    "index": {
+      "$ref": "#/$defs/IndexConfig"
     },
     "directories": {
       "$ref": "#/$defs/DirectoriesConfig"
